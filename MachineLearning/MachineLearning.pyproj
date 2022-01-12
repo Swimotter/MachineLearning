@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>15d62c4b-1c8f-4159-9c79-31c6e61e157d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MakerFaire\MachineLearning.py</StartupFile>
+    <StartupFile>MakerFaire\MLPractice.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MakerFaire\MachineLearning.py" />
+    <Compile Include="MachineLearning.py" />
+    <Compile Include="MakerFaire\MLPractice.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MakerFaire\" />
