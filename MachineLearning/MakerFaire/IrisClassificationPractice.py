@@ -24,3 +24,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
+#load data
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
+names = ["sepal-length", "sepal-width", 'petal-length', 'petal-width', 'class']
+dataset = pd.read_csv(url, names = names)
