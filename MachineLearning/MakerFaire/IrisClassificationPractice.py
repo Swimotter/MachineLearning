@@ -38,24 +38,18 @@ print(dataset.describe())
 # class distribution
 print(dataset.groupby('class').size())
 
-#data visualization
-dataset.plot(kind = "box", subplots = True, layout = (2,2), sharex = False, sharey = False)
-dataset.hist()
-scatter_matrix(dataset)
-plt.show()
-
 x = dataset.drop(['class'], axis = 1)
-y = dataset[:,-1]
+y = dataset.iloc[:,-1]
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.20, random_state = 2)
 
-#Algorithms
+#algorithms
 models = []
-models.append('Logistic Regression', LogisticRegression(solver = 'liblinear', multi_class = 'ovr'))
-models.append('Linear Discriminant', LinearDiscriminantAnalysis())
-models.append('K Neighbors', KNeighborsClassifier())
-models.append('Decision Tree', DecisionTreeClassifier())
-models.append('Gaussian', GaussianNB())
-models.append('SVM', SVC(gamma = 'auto'))
+models.append(['Logistic Regression', LogisticRegression(solver = 'liblinear', multi_class = 'ovr')])
+models.append(['Linear Discriminant', LinearDiscriminantAnalysis()])
+models.append(['K Neighbors', KNeighborsClassifier()])
+models.append(['Decision Tree', DecisionTreeClassifier()])
+models.append(['Gaussian', GaussianNB()])
+models.append(['SVM', SVC(gamma = 'auto')])
 
 results = []
 names = []
@@ -65,3 +59,16 @@ for name, model in models:
     results.append(cv_results)
     names.append(name)
     print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
+
+#data visualization
+dataset.plot(kind = "box", subplots = True, layout = (2,2), sharex = False, sharey = False)
+dataset.hist()
+scatter_matrix(dataset)
+
+#algorithms visualization
+plt.figure(figsize = (5,5))
+plt.boxplot(results, labels = names)
+plt.title('Algorithm Comparison')
+
+
+plt.show()
