@@ -60,6 +60,14 @@ for name, model in models:
     names.append(name)
     print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
 
+#predictions
+model = SVC(gamma = 'auto')
+model.fit(x_train, y_train)
+predictions = model.predict(x_test)
+print(accuracy_score(y_test, predictions))
+print(confusion_matrix(y_test, predictions))
+print(classification_report(y_test, predictions))
+
 #data visualization
 dataset.plot(kind = "box", subplots = True, layout = (2,2), sharex = False, sharey = False)
 dataset.hist()
