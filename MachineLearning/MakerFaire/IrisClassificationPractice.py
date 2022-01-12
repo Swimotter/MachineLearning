@@ -61,12 +61,17 @@ for name, model in models:
     print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
 
 #predictions
-model = SVC(gamma = 'auto')
+model = SVC(gamma = 'auto', probability = True)
 model.fit(x_train, y_train)
 predictions = model.predict(x_test)
 print(accuracy_score(y_test, predictions))
 print(confusion_matrix(y_test, predictions))
 print(classification_report(y_test, predictions))
+
+xNew = [[6.3, 2.8, 4.7, 1.3]]
+yNew = model.predict_proba(xNew)
+
+print('x = %s, Prediction: Iris-setosa(%s%%) Iris-versicolor(%s%%) Iris-virginica(%s%%)' % (xNew[0], yNew[0][0] * 100, yNew[0][1], yNew[0][2] * 100))
 
 #data visualization
 dataset.plot(kind = "box", subplots = True, layout = (2,2), sharex = False, sharey = False)
