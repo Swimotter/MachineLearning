@@ -44,11 +44,11 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.20, rand
 
 #algorithms
 models = []
-models.append(['Logistic Regression', LogisticRegression(solver = 'liblinear', multi_class = 'ovr')])
-models.append(['Linear Discriminant', LinearDiscriminantAnalysis()])
-models.append(['K Neighbors', KNeighborsClassifier()])
-models.append(['Decision Tree', DecisionTreeClassifier()])
-models.append(['Gaussian', GaussianNB()])
+models.append(['LR', LogisticRegression(solver = 'liblinear', multi_class = 'ovr')])
+models.append(['LDA', LinearDiscriminantAnalysis()])
+models.append(['KNN', KNeighborsClassifier()])
+models.append(['CART', DecisionTreeClassifier()])
+models.append(['NB', GaussianNB()])
 models.append(['SVM', SVC(gamma = 'auto')])
 
 results = []
