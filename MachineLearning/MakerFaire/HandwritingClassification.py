@@ -26,7 +26,6 @@ def load_data():
         plt.imshow(x_train[i], cmap = plt.get_cmap('gray'))
     return x_train, y_train, x_test, y_test
 
-
 def prep_img(train, test):
     #convert integers to floats
     train_norm = train.astype('float32')
@@ -62,6 +61,18 @@ def eval_model(x_data, y_data, n_folds = 5):
         histories.append(history)
     return scores, histories
 
-x_train, y_train, x_test, y_test = load_data()
-train_norm, test_norm = prep_img(x_train, x_test)
+def sum_diagnostics(histories):
+    for i in range(len(histories)):
+        #loss
+        plt.subplot(2, 1, 1)
+        plt.title('Cross Entropy Loss')
+        plt.plot(histories[i].history['loss'], color = 'blue', label = 'train')
+        plt.plot(histories[i].history['val_loss'], color = 'orange', label = 'test')
+        #accuracy
+        plt.subplot(2, 1, 2)
+		plt.title('Classification Accuracy')
+		plt.plot(histories[i].history['accuracy'], color = 'blue', label = 'train')
+		plt.plot(histories[i].history['val_accuracy'], color = 'orange', label = 'test')
+
+
 plt.show()
