@@ -7,6 +7,8 @@ from tensorflow.keras import models
 from tensorflow.keras import layers
 from tensorflow.keras import optimizers
 from sklearn.model_selection import KFold
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def load_data():
     #load emnist dataset
@@ -24,6 +26,7 @@ def load_data():
     for i in range(9):
         plt.subplot(330 + 1 + i)
         plt.imshow(x_train[i], cmap = plt.get_cmap('gray'))
+    print("Data loaded")
     return x_train, y_train, x_test, y_test
 
 def prep_img(train, test):
@@ -33,6 +36,7 @@ def prep_img(train, test):
     #normalize values
     train_norm /= 255.0
     test_norm /= 255.0
+    print("Images converted")
     return train_norm, test_norm
 
 def def_model():
@@ -45,13 +49,13 @@ def def_model():
     model.add(layers.Dense(62, activation = 'softmax'))
     #compile
     opt = optimizers.SGD(learning_rate = 0.01, momentum = 0.9)
-    model.compile(optimizer = opt, loss = 'categorical_crossentropy', metrics = ['accuracry'])
+    model.compile(optimizer = opt, loss = 'categorical_crossentropy', metrics = [tf.keras.metrics.Accuracy()])
     return model
 
 def eval_model(x_data, y_data, n_folds = 5):
     scores, histories = list(), list()
     kfold = KFold(n_folds, shuffle = True, random_state = 1)
-    for ix_train, ix_test in kfold.split(dataX):
+    for ix_train, ix_test in kfold.split(x_data):
         model = def_model()
         x_train, y_train, x_test, y_test = x_data[ix_train], y_data[ix_train], x_data[ix_test], y_data[ix_test]
         history = model.fit(x_train, y_train, epochs = 10, batch_size = 32, validation_data = (x_test, y_test), verbose = 0)
@@ -59,6 +63,7 @@ def eval_model(x_data, y_data, n_folds = 5):
         print('> %.3f' % (acc * 100.0))
         scores.append(acc)
         histories.append(history)
+    print("Evaluation finished")
     return scores, histories
 
 def sum_diagnostics(histories):
@@ -70,9 +75,20 @@ def sum_diagnostics(histories):
         plt.plot(histories[i].history['val_loss'], color = 'orange', label = 'test')
         #accuracy
         plt.subplot(2, 1, 2)
-		plt.title('Classification Accuracy')
-		plt.plot(histories[i].history['accuracy'], color = 'blue', label = 'train')
-		plt.plot(histories[i].history['val_accuracy'], color = 'orange', label = 'test')
+        plt.title('Classification Accuracy')
+        plt.plot(histories[i].history['accuracy'], color = 'blue', label = 'train')
+        plt.plot(histories[i].history['val_accuracy'], color = 'orange', label = 'test')
+    plt.show()
 
+def run_test():
+    #load data
+    x_train, y_train, x_test, y_test = load_data()
+    #prepare images
+    x_train, x_test = prep_img(x_train, x_test)
+    #evaluate model
+    scores, histories = eval_model(x_train, y_train)
+    #visualize results
+    sum_diagnostics(histories)
+    sum_diagnostics(scores)
 
-plt.show()
+run_test()
