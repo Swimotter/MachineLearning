@@ -6,6 +6,7 @@ import keras as ks
 from tensorflow.keras import models
 from tensorflow.keras import layers
 from tensorflow.keras import optimizers
+from sklearn.model_selection import KFold
 
 def load_data():
     #load emnist dataset
@@ -36,17 +37,31 @@ def prep_img(train, test):
     return train_norm, test_norm
 
 def def_model():
+    #cnn model
     model = models.Sequential()
     model.add(layers.Conv2D(32, (3, 3), activation = 'relu', kernel_initializer = 'he_uniform', input_shape = (28, 28, 1)))
     model.add(layers.MaxPooling2D(2, 2))
     model.add(layers.Flatten())
     model.add(layers.Dense(100, activation = 'relu', kernel_initializer = 'he_uniform'))
     model.add(layers.Dense(62, activation = 'softmax'))
+    #compile
     opt = optimizers.SGD(learning_rate = 0.01, momentum = 0.9)
     model.compile(optimizer = opt, loss = 'categorical_crossentropy', metrics = ['accuracry'])
     return model
 
+def eval_model(x_data, y_data, n_folds = 5):
+    scores, histories = list(), list()
+    kfold = KFold(n_folds, shuffle = True, random_state = 1)
+    for ix_train, ix_test in kfold.split(dataX):
+        model = def_model()
+        x_train, y_train, x_test, y_test = x_data[ix_train], y_data[ix_train], x_data[ix_test], y_data[ix_test]
+        history = model.fit(x_train, y_train, epochs = 10, batch_size = 32, validation_data = (x_test, y_test), verbose = 0)
+        _, acc = model.evaluate(x_test, y_test, verbose = 0)
+        print('> %.3f' % (acc * 100.0))
+        scores.append(acc)
+        histories.append(history)
+    return scores, histories
+
 x_train, y_train, x_test, y_test = load_data()
 train_norm, test_norm = prep_img(x_train, x_test)
-model = def_model()
 plt.show()
